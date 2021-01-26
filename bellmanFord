@@ -1,0 +1,71 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct edge{
+    int src,dest,wt;
+};
+struct graph{
+    int V,E;
+    struct edge *edge;
+};
+struct graph* initialise(int v,int e){
+    struct graph *g = (struct graph*)malloc(sizeof(struct graph));
+    g->V = v;
+    g->E = e;
+    g->edge = (struct edge*)malloc(g->E*sizeof(struct edge));
+    return g;
+    
+}
+void display(int dist[],int s,int v){
+    for(int i=0;i<v;i++){
+        printf(" dist from %d to %d is %d",s,i,dist[i]);
+    }
+}
+void bellman(struct graph *g,int s){
+    int v = g->V;
+    int e = g->E;
+    int dist[v] ;
+    for(int k=0;k<v;k++){
+        dist[k] = 9999;
+    }
+    dist[s] = 0;
+    
+    for(int i=1;i<=v-1;i++){
+        for(int j=0;j<e;j++){
+            int u = g->edge[j].src;
+            int  v = g->edge[j].dest;
+            int wt = g->edge[j].wt;
+            if(dist[u]+wt < dist[v]){
+                dist[v] = dist[u]+wt;
+            }
+        }
+    }
+    for(int j=0;j<e;j++){
+            int u = g->edge[j].src;
+            int  v = g->edge[j].dest;
+            int wt = g->edge[j].wt;
+            if(dist[u]+wt < dist[v]){
+                printf("the cycle has -ve edge\n");
+            }
+        }
+    display(dist,s,v);
+}
+int main(){
+    int e,v,s;
+    struct graph *g;
+    
+    printf("enter number of vertices\n");
+    scanf("%d",&v);
+    printf("enter number of edges\n");
+    scanf("%d",&e);
+    
+    g = initialise(v,e);
+    for(int i=0;i<e;i++){
+        printf("enter SRC DEST WEIGHT of %d edge",i+1);
+        scanf("%d",&g->edge[i].src);
+        scanf("%d",&g->edge[i].dest);
+        scanf("%d",&g->edge[i].wt);
+    }
+    printf("enter the source\n");
+    scanf("%d",&s);
+    bellman(g,s);
+}
