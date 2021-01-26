@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define TRUE 1
+#define FALSE 0
+#define FULL 4
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+typedef struct node node;
+
+struct queue
+{
+    int count;
+    node *front;
+    node *rear;
+};
+typedef struct queue queue;
+
+void initialize(queue *q)
+{
+    q->count = 0;
+    q->front = NULL;
+    q->rear = NULL;
+}
+
+int isempty(queue *q)
+{
+    return (q->count == 0);
+}
+int isFull(queue *q){
+    
+    return (q->count==FULL);
+}
+
+void enq(queue *q,int elem){
+   
+    if(isFull(q)){
+        printf("full");
+    }
+    else{
+        
+        node *n;
+        
+        n = malloc(sizeof(node));
+        if(n==NULL){
+            printf("mem allocation failed\n");
+        }
+        n->data = elem;
+        n->next = NULL;
+            if(isempty(q)){
+                q->front = q->rear = n;
+            }
+            else{
+                q->rear->next = n;
+                q->rear = n;
+            }
+        q->count++;
+        }
+}
+
+
+int dequeue(queue *q)
+{
+    if(isempty(q)){
+                       printf("queue is empty\n");
+                       return 0;
+    }
+    node *tmp;
+    int n = q->front->data;
+    tmp = q->front;
+    q->front = q->front->next;
+    q->count--;
+   free(tmp);
+    return(n);
+}
+
+void display(node *head)
+{
+    if(head == NULL)
+    {
+        printf("NULL\n");
+    }
+    else
+    {
+        printf("%d\n", head -> data);
+        display(head->next);
+    }
+}
+
+int main()
+{
+    queue *q;
+    int ch,e,d;
+    q = malloc(sizeof(queue));
+    initialize(q);
+    while(1){
+        printf("enter 1.enq 2 deq 3 display\n");
+        scanf("%d",&ch);
+        switch(ch){
+            case 1: printf("\nenter elem\n");
+                    scanf("%d",&e);
+                    enq(q,e);
+                    break;
+            case 2: 
+                    
+                        d = dequeue(q);
+                        printf("%d deleted",d);
+                    
+                    break;
+            case 3: display(q->front);
+                    break;
+                    
+        }
+    }
+  
+    return 0;
+}
